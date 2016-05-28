@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 #=================================================================
 # Copyright(c) Institute of Software, Chinsese Academy of Sciences
 #=================================================================
@@ -7,9 +8,15 @@
 import logging
 from logging import Formatter
 
+# import sys
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
+
 from flask import Flask
 from flask_restful import Api
 from flask_restful.representations.json import output_json
+# output_json.func_globals['settings'] = {'ensure_ascii': False, 'encoding': 'utf8'}
+
 
 
 app = Flask(__name__)
