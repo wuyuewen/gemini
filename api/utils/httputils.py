@@ -33,3 +33,11 @@ def _byteify(data, ignore_dicts = False):
 #         return { _byteify(key, ignore_dicts=True): _byteify(value, ignore_dicts=True) for key, value in data.iteritems() }
     # if it's anything else, return it in its original form
     return data
+
+def to_bool(data):
+    if str(data) in ['0', 'False', 'false']:
+        return False
+    elif str(data) in ['1', 'True', 'true']:
+        return True
+    else:
+        raise ValueError
