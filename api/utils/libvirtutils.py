@@ -48,25 +48,25 @@ def create_domain(conn, json):
 
 def start_domain(conn, uuid_or_name, flag):
     if len(uuid_or_name) == 36:
-        return conn.lookupByUUIDString(uuid_or_name).createWithFlags(flag)
+        return conn.lookupByUUIDString(uuid_or_name).createWithFlags(int(flag))
     else:
-        return conn.lookupByName(uuid_or_name).createWithFlags(flag)
+        return conn.lookupByName(uuid_or_name).createWithFlags(int(flag))
     
 def stop_domain(conn, uuid_or_name, flag):
     if len(uuid_or_name) == 36:
-        return conn.lookupByUUIDString(uuid_or_name).shutdownFlags(flag)
+        return conn.lookupByUUIDString(uuid_or_name).shutdownFlags(int(flag))
     else:
-        return conn.lookupByName(uuid_or_name).shutdownFlags(flag)
+        return conn.lookupByName(uuid_or_name).shutdownFlags(int(flag))
     
 def restart_domain(conn, uuid_or_name, flag):
     if len(uuid_or_name) == 36:
-        return conn.lookupByUUIDString(uuid_or_name).reboot(flag)
+        return conn.lookupByUUIDString(uuid_or_name).reboot(int(flag))
     else:
-        return conn.lookupByName(uuid_or_name).reboot(flag)
+        return conn.lookupByName(uuid_or_name).reboot(int(flag))
     
 def delete_domain(conn, uuid_or_name, flag):
     if len(uuid_or_name) == 36:
-        return conn.lookupByUUIDString(uuid_or_name).undefineFlags(flag)
+        return conn.lookupByUUIDString(uuid_or_name).undefineFlags(int(flag))
     else:
-        return conn.lookupByName(uuid_or_name).undefineFlags(flag)
+        return conn.lookupByName(uuid_or_name).undefineFlags(int(flag))
     
