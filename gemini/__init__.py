@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*- 
 #=================================================================
-# Copyright(c) Institute of Software, Chinsese Academy of Sciences
+# Copyright(c) Institute of Software, Chinese Academy of Sciences
 #=================================================================
 # Author : wuyuewen@otcaix.iscas.ac.cn
 # Date   : 2016/05/25
@@ -50,4 +49,5 @@ handler.setFormatter(Formatter(
 ))
 app.logger.addHandler(handler)
 
-from api import dispatcher
+# from api import dispatcher
+from gemini.restful import dispatcher

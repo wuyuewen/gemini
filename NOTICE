@@ -1,0 +1,26 @@
+MIT gemini<br />
+Copyright(c) Institute of Software, Chinese Academy of Sciences
+
+# NOTICE files
+
+The following NOTICEs are pertain to software distributed with this project.
+
+Apache Libcloud<br />
+Copyright (c) 2010-2015 The Apache Software Foundation
+
+This product includes software developed at<br />
+The Apache Software Foundation (http://www.apache.org/).
+
+This product includes software developed by<br />
+Cloudkick (http://www.cloudkick.com/).
+
+libvirt<br />
+Copyright (C) 2007-2008, 2010-2014 Red Hat, Inc.<br />
+LICENSE: (GNU LGPL 2.1)<br />
+HOMEPAGE: http://libvirt.org/
+
+flask<br />
+Copyright (c) 2015 by Armin Ronacher and contributors.
+
+xmltodict<br />
+Copyright (C) 2012 Martin Blech and individual contributors.

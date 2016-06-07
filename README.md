@@ -1,5 +1,5 @@
 # Name: gemini
-A project of Xen Hypervisor Clustering and Service API.
+A project of extends apache-libcloud particularly on driver Libvirt and Docker.
 
 **Copyright: Institute of Software, Chinese Academy of Sciences**
 
