@@ -15,19 +15,22 @@ from libcloud.compute.providers import get_driver
 log = app.logger
 
 __all__ = [
-        "LibvritList",
-        "LibvritCreate",
-        "LibvritInspect",
-        "LibvritStop",
-        "LibvritStart",
-        "LibvritRestart",
-        "LibvritDelete",
+        "LibvirtList",
+        "LibvirtCreate",
+        "LibvirtInspect",
+        "LibvirtStop",
+        "LibvirtStart",
+        "LibvirtRestart",
+        "LibvirtDelete",
+        "LibvirtSuspend",
+        "LibvirtResume",
+        "LibvirtAttachDevice",
            ]
 
 def _driver_URI(driver):
     ''' Return specific driver URI. URIs are documented at http://libvirt.org/uri.html
     :param: str value: the driver name
-    :return: the specific driver URI that match the driver name
+    :return: the specific driver URI that match with the driver name
     :rtype: str
     '''
     if driver == "xen":
@@ -39,7 +42,7 @@ def _driver_URI(driver):
     else:
         return None
 
-class LibvritList(Resource):
+class LibvirtList(Resource):
     
     def get(self, driver):
         try:
@@ -50,7 +53,7 @@ class LibvritList(Resource):
         except ValueError:
             abort(400, message="bad parameter")
 
-class LibvritCreate(Resource):
+class LibvirtCreate(Resource):
 #     def __init__(self):
 #         self.reqparse = reqparse.RequestParser()
 #         self.reqparse.add_argument('domain', type = str, required = True, help = 'No domain provided', location = 'json')
@@ -67,7 +70,7 @@ class LibvritCreate(Resource):
         vm_uuid = driver.create_node(json_data)
         return output_json({"Uuid": vm_uuid, "Warnings": []}, 201)
        
-class LibvritInspect(Resource):
+class LibvirtInspect(Resource):
            
     def get(self, driver, uuid_or_name):
         try:
@@ -77,7 +80,7 @@ class LibvritInspect(Resource):
         except ValueError:
             abort(400, message="bad parameter")
                
-class LibvritStart(Resource):
+class LibvirtStart(Resource):
            
     def post(self, driver, uuid_or_name):
         try:
@@ -88,7 +91,7 @@ class LibvritStart(Resource):
         except ValueError:
             abort(400, message="bad parameter")
                
-class LibvritStop(Resource):
+class LibvirtStop(Resource):
     
     def post(self, driver, uuid_or_name):
         try:
@@ -99,7 +102,7 @@ class LibvritStop(Resource):
         except ValueError:
             abort(400, message="bad parameter")
    
-class LibvritRestart(Resource):
+class LibvirtRestart(Resource):
     
     def post(self, driver, uuid_or_name):
         try:
@@ -110,7 +113,7 @@ class LibvritRestart(Resource):
         except ValueError:
             abort(400, message="bad parameter")
                
-class LibvritDelete(Resource):
+class LibvirtDelete(Resource):
            
     def post(self, driver, uuid_or_name):
         try:
@@ -120,3 +123,35 @@ class LibvritDelete(Resource):
             return output_json(driver.delete_node(uuid_or_name, flag), 204)
         except ValueError:
             abort(400, message="bad parameter")        
+
+class LibvirtSuspend(Resource):
+           
+    def post(self, driver, uuid_or_name):
+        try:
+            cls = get_driver(ProviderExt.LIBVIRT_EXT)
+            driver = cls(_driver_URI(driver))
+            return output_json(driver.suspend_node(uuid_or_name), 204)
+        except ValueError:
+            abort(400, message="bad parameter")       
+            
+class LibvirtResume(Resource):
+           
+    def post(self, driver, uuid_or_name):
+        try:
+            cls = get_driver(ProviderExt.LIBVIRT_EXT)
+            driver = cls(_driver_URI(driver))
+            return output_json(driver.resume_node(uuid_or_name), 204)
+        except ValueError:
+            abort(400, message="bad parameter")   
+            
+class LibvirtAttachDevice(Resource):
+           
+    def post(self, driver, uuid_or_name):
+        try:
+            cls = get_driver(ProviderExt.LIBVIRT_EXT)
+            driver = cls(_driver_URI(driver))
+            json_data = request.get_json(force=True)
+            flag = request.args.get('flag', 0)
+            return output_json(driver.attach_device(uuid_or_name, json_data, flag), 204)
+        except ValueError:
+            abort(400, message="bad parameter") 

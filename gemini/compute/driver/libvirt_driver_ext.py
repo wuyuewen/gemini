@@ -13,6 +13,12 @@ class LibvirtNodeDriverExt(LibvirtNodeDriver):
     
     type = ProviderExt.LIBVIRT_EXT
     
+    def _verify_uuid(self, data):
+        if len(data.replace('-', '')) == 32:
+            return True
+        else:
+            return False
+    
     def list_nodes(self, list_all=False):
         retv = []
         all_vms = self.connection.listAllDomains()
@@ -27,7 +33,7 @@ class LibvirtNodeDriverExt(LibvirtNodeDriver):
         return retv
     
     def inspect_node(self, uuid_or_name):
-        if len(uuid_or_name) == 36:
+        if self._verify_uuid(uuid_or_name):
             return xmltodict.parse(self.connection.lookupByUUIDString(uuid_or_name).XMLDesc())
         else:
             return xmltodict.parse(self.connection.lookupByName(uuid_or_name).XMLDesc())   
@@ -38,25 +44,46 @@ class LibvirtNodeDriverExt(LibvirtNodeDriver):
         return vm.UUIDString() 
           
     def start_node(self, uuid_or_name, flag):
-        if len(uuid_or_name) == 36:
+        if self._verify_uuid(uuid_or_name):
             return self.connection.lookupByUUIDString(uuid_or_name).createWithFlags(int(flag))
         else:
             return self.connection.lookupByName(uuid_or_name).createWithFlags(int(flag))
         
     def stop_node(self, uuid_or_name, flag):
-        if len(uuid_or_name) == 36:
+        if self._verify_uuid(uuid_or_name):
             return self.connection.lookupByUUIDString(uuid_or_name).shutdownFlags(int(flag))
         else:
             return self.connection.lookupByName(uuid_or_name).shutdownFlags(int(flag))
         
     def restart_node(self, uuid_or_name, flag):
-        if len(uuid_or_name) == 36:
+        if self._verify_uuid(uuid_or_name):
             return self.connection.lookupByUUIDString(uuid_or_name).reboot(int(flag))
         else:
             return self.connection.lookupByName(uuid_or_name).reboot(int(flag))
         
     def delete_node(self, uuid_or_name, flag):
-        if len(uuid_or_name) == 36:
+        if self._verify_uuid(uuid_or_name):
             return self.connection.lookupByUUIDString(uuid_or_name).undefineFlags(int(flag))
         else:
-            return self.connection.lookupByName(uuid_or_name).undefineFlags(int(flag))   
+            return self.connection.lookupByName(uuid_or_name).undefineFlags(int(flag))  
+        
+    def suspend_node(self, uuid_or_name):
+        if self._verify_uuid(uuid_or_name):
+            return self.connection.lookupByUUIDString(uuid_or_name).suspend()
+        else:
+            return self.connection.lookupByName(uuid_or_name).suspend()
+
+    def resume_node(self, uuid_or_name):
+        if self._verify_uuid(uuid_or_name):
+            return self.connection.lookupByUUIDString(uuid_or_name).resume()
+        else:
+            return self.connection.lookupByName(uuid_or_name).resume()        
+        
+    def attach_device(self, uuid_or_name, json, flag):
+        xml_desc = xmltodict.unparse(json, pretty=True)
+        if self._verify_uuid(uuid_or_name):
+            return self.connection.lookupByUUIDString(uuid_or_name).attachDeviceFlags(xml_desc, flag)
+        else:
+            return self.connection.lookupByName(uuid_or_name).attachDeviceFlags(xml_desc, flag)
+        
+        
