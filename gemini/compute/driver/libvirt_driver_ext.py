@@ -5,21 +5,15 @@
 # Date   : 2016/05/25
 
 import xmltodict
-from gemini.compute.types import ProviderExt
+from gemini.compute.types import *
 from libcloud.compute.drivers.libvirt_driver import LibvirtNodeDriver 
-from libcloud.compute.drivers.dummy import DummyNodeDriver
+
 
 class LibvirtNodeDriverExt(LibvirtNodeDriver):
     
     type = ProviderExt.LIBVIRT_EXT
     
-    def _verify_uuid(self, data):
-        if len(data.replace('-', '')) == 32:
-            return True
-        else:
-            return False
-    
-    def list_nodes(self, list_all=False):
+    def list_nodes(self, flag, list_all=False):
         retv = []
         all_vms = self.connection.listAllDomains()
         if all_vms:
@@ -27,16 +21,16 @@ class LibvirtNodeDriverExt(LibvirtNodeDriver):
                 if cmp(vm.ID(), 0) == 0:
                     continue
                 if list_all:
-                    retv.append(xmltodict.parse(vm.XMLDesc()))
+                    retv.append(xmltodict.parse(vm.XMLDesc(flag)))
                 elif cmp(vm.ID(), -1) != 0:
-                    retv.append(xmltodict.parse(vm.XMLDesc()))
+                    retv.append(xmltodict.parse(vm.XMLDesc(flag)))
         return retv
     
-    def inspect_node(self, uuid_or_name):
-        if self._verify_uuid(uuid_or_name):
-            return xmltodict.parse(self.connection.lookupByUUIDString(uuid_or_name).XMLDesc())
+    def inspect_node(self, uuid_or_name, flag):
+        if check_uuid(uuid_or_name):
+            return xmltodict.parse(self.connection.lookupByUUIDString(uuid_or_name).XMLDesc(flag))
         else:
-            return xmltodict.parse(self.connection.lookupByName(uuid_or_name).XMLDesc())   
+            return xmltodict.parse(self.connection.lookupByName(uuid_or_name).XMLDesc(flag))   
         
     def create_node(self, json):
         xml_desc = xmltodict.unparse(json, pretty=True)
@@ -44,46 +38,73 @@ class LibvirtNodeDriverExt(LibvirtNodeDriver):
         return vm.UUIDString() 
           
     def start_node(self, uuid_or_name, flag):
-        if self._verify_uuid(uuid_or_name):
-            return self.connection.lookupByUUIDString(uuid_or_name).createWithFlags(int(flag))
+        if check_uuid(uuid_or_name):
+            return self.connection.lookupByUUIDString(uuid_or_name).createWithFlags(flag)
         else:
-            return self.connection.lookupByName(uuid_or_name).createWithFlags(int(flag))
+            return self.connection.lookupByName(uuid_or_name).createWithFlags(flag)
         
     def stop_node(self, uuid_or_name, flag):
-        if self._verify_uuid(uuid_or_name):
-            return self.connection.lookupByUUIDString(uuid_or_name).shutdownFlags(int(flag))
+        if check_uuid(uuid_or_name):
+            return self.connection.lookupByUUIDString(uuid_or_name).shutdownFlags(flag)
         else:
-            return self.connection.lookupByName(uuid_or_name).shutdownFlags(int(flag))
+            return self.connection.lookupByName(uuid_or_name).shutdownFlags(flag)
+        
+    def destroy_node(self, uuid_or_name, flag):
+        if check_uuid(uuid_or_name):
+            return self.connection.lookupByUUIDString(uuid_or_name).destroyFlags(flag)
+        else:
+            return self.connection.lookupByName(uuid_or_name).destroyFlags(flag)
         
     def restart_node(self, uuid_or_name, flag):
-        if self._verify_uuid(uuid_or_name):
-            return self.connection.lookupByUUIDString(uuid_or_name).reboot(int(flag))
+        if check_uuid(uuid_or_name):
+            return self.connection.lookupByUUIDString(uuid_or_name).reboot(flag)
         else:
-            return self.connection.lookupByName(uuid_or_name).reboot(int(flag))
+            return self.connection.lookupByName(uuid_or_name).reboot(flag)
         
     def delete_node(self, uuid_or_name, flag):
-        if self._verify_uuid(uuid_or_name):
-            return self.connection.lookupByUUIDString(uuid_or_name).undefineFlags(int(flag))
+        if check_uuid(uuid_or_name):
+            return self.connection.lookupByUUIDString(uuid_or_name).undefineFlags(flag)
         else:
-            return self.connection.lookupByName(uuid_or_name).undefineFlags(int(flag))  
+            return self.connection.lookupByName(uuid_or_name).undefineFlags(flag)  
         
     def suspend_node(self, uuid_or_name):
-        if self._verify_uuid(uuid_or_name):
+        if check_uuid(uuid_or_name):
             return self.connection.lookupByUUIDString(uuid_or_name).suspend()
         else:
             return self.connection.lookupByName(uuid_or_name).suspend()
 
     def resume_node(self, uuid_or_name):
-        if self._verify_uuid(uuid_or_name):
+        if check_uuid(uuid_or_name):
             return self.connection.lookupByUUIDString(uuid_or_name).resume()
         else:
             return self.connection.lookupByName(uuid_or_name).resume()        
         
     def attach_device(self, uuid_or_name, json, flag):
         xml_desc = xmltodict.unparse(json, pretty=True)
-        if self._verify_uuid(uuid_or_name):
+        if check_uuid(uuid_or_name):
             return self.connection.lookupByUUIDString(uuid_or_name).attachDeviceFlags(xml_desc, flag)
         else:
             return self.connection.lookupByName(uuid_or_name).attachDeviceFlags(xml_desc, flag)
         
+    def resize_memory(self, uuid_or_name, memory, memory_type, flag):
+        if check_uuid(uuid_or_name):
+            if memory_type == Memory.TARGET_MEMORY:
+                return self.connection.lookupByUUIDString(uuid_or_name).setMemoryFlags(memory, flag)
+            elif memory_type == Memory.MAX_MEMORY:
+                return self.connection.lookupByUUIDString(uuid_or_name).setMaxMemory(memory)
+            else:
+                raise ValueError
+        else:
+            if memory_type == Memory.TARGET_MEMORY:
+                return self.connection.lookupByName(uuid_or_name).setMemoryFlags(memory, flag) 
+            elif memory_type == Memory.MAX_MEMORY:    
+                return self.connection.lookupByName(uuid_or_name).setMaxMemory(memory)
+            else:
+                raise ValueError
+            
+    def resize_cpu(self, uuid_or_name, vcpu_num, flag):
+        if check_uuid(uuid_or_name):
+            return self.connection.lookupByUUIDString(uuid_or_name).setVcpusFlags(vcpu_num, flag)
+        else:
+            return self.connection.lookupByName(uuid_or_name).setVcpusFlags(vcpu_num, flag) 
         
