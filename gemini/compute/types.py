@@ -8,16 +8,34 @@ from libcloud.compute.types import Provider
 
 
 __all__ = [
-        "check_uuid",
-        "Memory",
+        "to_host_version",
+        "check_uuid_or_name",
+        "check_mac_or_name",
+        "MemoryTypes",
         "ProviderExt",
+        'HostInfo',
            ]
 
-def check_uuid(data):
+def check_uuid_or_name(data):
     if len(data.replace('-', '')) == 32:
         return True
     else:
         return False
+    
+def check_mac_or_name(data):
+    if len(data.replace(':', '')) == 12 or len(data.replace('-', '')) == 12:
+        return True
+    else:
+        return False
+    
+def to_host_version(version):
+    version = int(version)
+    major = version / 1000000
+    version %= 1000000
+    minor = version / 1000
+    rel = version % 1000
+    return '%d.%d.%d' % (major, minor, rel)
+    
 
 class Type(object):
     @classmethod
@@ -38,7 +56,7 @@ class Type(object):
         """
         return getattr(cls, value.upper(), None)
     
-class Memory(Type):
+class MemoryTypes(Type):
     
     TARGET_MEMORY = 'target'
     MAX_MEMORY = 'max'
@@ -46,3 +64,22 @@ class Memory(Type):
 class ProviderExt(Provider):
     
     LIBVIRT_EXT = 'libvirt_ext'
+    
+class HostInfo(object):
+    
+    def __init__(self):
+        self.model = None
+        self.memory_kb = None
+        self.cpus = None
+        self.mhz = None
+        self.numa = None
+        self.sockets = None
+        self.cores = None
+        self.threads = None
+        self.hostname = None
+        self.hypervisor = None
+        self.version = None
+        self.lib_version = None
+    
+    def to_dict(self):
+        return self.__dict__

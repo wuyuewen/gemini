@@ -13,22 +13,25 @@ from gemini import app
 log = app.logger
 
 __all__ = [
-        "LibvirtList",
-        "LibvirtCreate",
-        "LibvirtInspect",
-        "LibvirtStop",
-        "LibvirtDestroy",
-        "LibvirtStart",
-        "LibvirtRestart",
-        "LibvirtDelete",
-        "LibvirtSuspend",
-        "LibvirtResume",
-        "LibvirtAttachDevice",
-        "LibvirtResizeMemory",
-        "LibvirtResizeVcpu",
+        "LibvirtNodesList",
+        "LibvirtNodesCreate",
+        "LibvirtNodesInspect",
+        "LibvirtNodesStop",
+        "LibvirtNodesDestroy",
+        "LibvirtNodesStart",
+        "LibvirtNodesRestart",
+        "LibvirtNodesDelete",
+        "LibvirtNodesSuspend",
+        "LibvirtNodesResume",
+        "LibvirtNodesAttachDevice",
+        "LibvirtNodesResizeMemory",
+        "LibvirtNodesResizeVcpu",
+#         "LibvirtSwitchToTemplate",
+        "LibvirtHostSystemInspect",
+        "LibvirtHostInterfaceInspect",
            ]
 
-class LibvirtList(Resource):
+class LibvirtNodesList(Resource):
     
     def get(self, driver):
         try:
@@ -39,7 +42,7 @@ class LibvirtList(Resource):
         except ValueError:
             abort(400, message="bad parameter")
 
-class LibvirtCreate(Resource):
+class LibvirtNodesCreate(Resource):
           
     def post(self, driver):
         driver = to_driver(driver)
@@ -47,7 +50,7 @@ class LibvirtCreate(Resource):
         vm_uuid = driver.create_node(json_data)
         return output_json({"Uuid": vm_uuid, "Warnings": []}, 201)
        
-class LibvirtInspect(Resource):
+class LibvirtNodesInspect(Resource):
            
     def get(self, driver, uuid_or_name):
         try:
@@ -57,7 +60,7 @@ class LibvirtInspect(Resource):
         except ValueError:
             abort(400, message="bad parameter")
                
-class LibvirtStart(Resource):
+class LibvirtNodesStart(Resource):
            
     def post(self, driver, uuid_or_name):
         try:
@@ -67,7 +70,7 @@ class LibvirtStart(Resource):
         except ValueError:
             abort(400, message="bad parameter")
                
-class LibvirtStop(Resource):
+class LibvirtNodesStop(Resource):
     
     def post(self, driver, uuid_or_name):
         try:
@@ -77,17 +80,17 @@ class LibvirtStop(Resource):
         except ValueError:
             abort(400, message="bad parameter")
             
-class LibvirtDestroy(Resource):
+class LibvirtNodesDestroy(Resource):
     
     def post(self, driver, uuid_or_name):
         try:
             driver = to_driver(driver) 
             flag = int(request.args.get('flag', 0))
-            return output_json(driver.stop_node(uuid_or_name, flag), 204)
+            return output_json(driver.destroy_node(uuid_or_name, flag), 204)
         except ValueError:
             abort(400, message="bad parameter")
    
-class LibvirtRestart(Resource):
+class LibvirtNodesRestart(Resource):
     
     def post(self, driver, uuid_or_name):
         try:
@@ -97,7 +100,7 @@ class LibvirtRestart(Resource):
         except ValueError:
             abort(400, message="bad parameter")
                
-class LibvirtDelete(Resource):
+class LibvirtNodesDelete(Resource):
            
     def post(self, driver, uuid_or_name):
         try:
@@ -107,7 +110,7 @@ class LibvirtDelete(Resource):
         except ValueError:
             abort(400, message="bad parameter")        
 
-class LibvirtSuspend(Resource):
+class LibvirtNodesSuspend(Resource):
            
     def post(self, driver, uuid_or_name):
         try:
@@ -116,7 +119,7 @@ class LibvirtSuspend(Resource):
         except ValueError:
             abort(400, message="bad parameter")       
             
-class LibvirtResume(Resource):
+class LibvirtNodesResume(Resource):
            
     def post(self, driver, uuid_or_name):
         try:
@@ -125,18 +128,18 @@ class LibvirtResume(Resource):
         except ValueError:
             abort(400, message="bad parameter")   
             
-class LibvirtAttachDevice(Resource):
+class LibvirtNodesAttachDevice(Resource):
            
     def post(self, driver, uuid_or_name):
         try:
             driver = to_driver(driver)
             json_data = request.get_json(force=True)
             flag = int(request.args.get('flag', 0))
-            return output_json(driver.attach_device(uuid_or_name, json_data, flag), 201)
+            return output_json(driver.node_attach_device(uuid_or_name, json_data, flag), 201)
         except ValueError:
             abort(400, message="bad parameter") 
             
-class LibvirtResizeMemory(Resource):
+class LibvirtNodesResizeMemory(Resource):
            
     def post(self, driver, uuid_or_name):
         try:
@@ -146,11 +149,11 @@ class LibvirtResizeMemory(Resource):
             flag = int(request.args.get('flag', 0))
             if not memory or not memory_type:
                 abort(400, message="bad parameter")
-            return output_json(driver.resize_memory(uuid_or_name, memory, memory_type, flag), 204)
+            return output_json(driver.node_resize_memory(uuid_or_name, memory, memory_type, flag), 204)
         except ValueError:
             abort(400, message="bad parameter") 
             
-class LibvirtResizeVcpu(Resource):
+class LibvirtNodesResizeVcpu(Resource):
            
     def post(self, driver, uuid_or_name):
         try:
@@ -159,6 +162,35 @@ class LibvirtResizeVcpu(Resource):
             flag = int(request.args.get('flag', 0))
             if not vcpu:
                 abort(400, message="bad parameter")
-            return output_json(driver.resize_cpu(uuid_or_name, vcpu, flag), 204)
+            return output_json(driver.node_resize_cpu(uuid_or_name, vcpu, flag), 204)
         except ValueError:
             abort(400, message="bad parameter") 
+
+# class LibvirtSwitchToTemplate(Resource):
+#            
+#     def post(self, driver, uuid_or_name):
+#         try:
+#             driver = to_driver(driver)
+#             flag = int(request.args.get('flag', 0))
+#             return output_json(driver.switch_to_template(uuid_or_name, flag), 204)
+#         except ValueError:
+#             abort(400, message="bad parameter") 
+
+class LibvirtHostSystemInspect(Resource):
+           
+    def get(self, driver):
+        try:
+            driver = to_driver(driver)
+            return output_json(driver.inspect_host_system(), 200)
+        except ValueError:
+            abort(400, message="bad parameter")
+            
+class LibvirtHostInterfaceInspect(Resource):
+           
+    def get(self, driver, mac_or_name):
+        try:
+            driver = to_driver(driver)
+            flag = int(request.args.get('flag', 0))
+            return output_json(driver.inspect_host_interface(mac_or_name, flag), 200)
+        except ValueError:
+            abort(400, message="bad parameter")
