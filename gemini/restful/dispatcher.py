@@ -23,4 +23,6 @@ restful_api.add_resource(LibvirtNodesResizeVcpu, '/libvirt/<string:driver>/nodes
 # restful_api.add_resource(LibvirtSwitchToTemplate, '/libvirt/<string:driver>/nodes/<string:uuid_or_name>/template/switch')
 
 restful_api.add_resource(LibvirtHostSystemInspect, '/libvirt/<string:driver>/host/system/json')
-restful_api.add_resource(LibvirtHostInterfaceInspect, '/libvirt/<string:driver>/host/interfaces/<string:mac_or_name>/json')
+restful_api.add_resource(LibvirtHostInterfacesList, '/libvirt/<string:driver>/host/interfaces/json')
+restful_api.add_resource(LibvirtHostInterfacesInspect, '/libvirt/<string:driver>/host/interfaces/<string:mac_or_name>/json')
+

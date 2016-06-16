@@ -13,7 +13,7 @@ class LibvirtNodeDriverExt(LibvirtNodeDriver):
     
     type = ProviderExt.LIBVIRT_EXT
     
-    def list_nodes(self, flag, list_all=False):
+    def list_nodes(self, flag, list_all):
         retv = []
         all_vms = self.connection.listAllDomains()
         if all_vms:
@@ -137,6 +137,17 @@ class LibvirtNodeDriverExt(LibvirtNodeDriver):
         host_info.version = to_host_version(self.connection.getVersion())
         host_info.lib_version = to_host_version(self.connection.getLibVersion())
         return host_info.to_dict()
+    
+    def list_host_interfaces(self, flag, list_all):
+        retv = []
+        interfaces = self.connection.listAllInterfaces()
+        if interfaces:
+            for interface in interfaces:
+                if list_all:
+                    retv.append(xmltodict.parse(interface.XMLDesc(flag)))
+                elif interface.isActive():
+                    retv.append(xmltodict.parse(interface.XMLDesc(flag)))
+        return retv
     
     def inspect_host_interface(self, mac_or_uuid, flag):
         if check_mac_or_name(mac_or_uuid):

@@ -28,7 +28,8 @@ __all__ = [
         "LibvirtNodesResizeVcpu",
 #         "LibvirtSwitchToTemplate",
         "LibvirtHostSystemInspect",
-        "LibvirtHostInterfaceInspect",
+        "LibvirtHostInterfacesList",
+        "LibvirtHostInterfacesInspect",
            ]
 
 class LibvirtNodesList(Resource):
@@ -185,7 +186,18 @@ class LibvirtHostSystemInspect(Resource):
         except ValueError:
             abort(400, message="bad parameter")
             
-class LibvirtHostInterfaceInspect(Resource):
+class LibvirtHostInterfacesList(Resource):
+           
+    def get(self, driver):
+        try:
+            driver = to_driver(driver)
+            list_all = to_bool(request.args.get('all', False))
+            flag = int(request.args.get('flag', 0))
+            return output_json(driver.list_host_interfaces(flag, list_all), 200)
+        except ValueError:
+            abort(400, message="bad parameter")    
+            
+class LibvirtHostInterfacesInspect(Resource):
            
     def get(self, driver, mac_or_name):
         try:
