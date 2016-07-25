@@ -24,6 +24,8 @@ __all__ = [
         "LibvirtNodesSuspend",
         "LibvirtNodesResume",
         "LibvirtNodesAttachDevice",
+        "LibvirtNodesDetachDevice",
+        "LibvirtNodesUpdateDevice",
         "LibvirtNodesResizeMemory",
         "LibvirtNodesResizeVcpu",
 #         "LibvirtSwitchToTemplate",
@@ -137,6 +139,28 @@ class LibvirtNodesAttachDevice(Resource):
             json_data = request.get_json(force=True)
             flag = int(request.args.get('flag', 0))
             return output_json(driver.node_attach_device(uuid_or_name, json_data, flag), 201)
+        except ValueError:
+            abort(400, message="bad parameter") 
+            
+class LibvirtNodesDetachDevice(Resource):
+           
+    def post(self, driver, uuid_or_name):
+        try:
+            driver = to_driver(driver)
+            json_data = request.get_json(force=True)
+            flag = int(request.args.get('flag', 0))
+            return output_json(driver.node_detach_device(uuid_or_name, json_data, flag), 204)
+        except ValueError:
+            abort(400, message="bad parameter")
+            
+class LibvirtNodesUpdateDevice(Resource):
+    
+    def post(self, driver, uuid_or_name):
+        try:
+            driver = to_driver(driver)
+            json_data = request.get_json(force=True)
+            flag = int(request.args.get('flag', 0))
+            return output_json(driver.node_update_device(uuid_or_name, json_data, flag), 201)
         except ValueError:
             abort(400, message="bad parameter") 
             

@@ -18,6 +18,8 @@ restful_api.add_resource(LibvirtNodesDelete, '/libvirt/<string:driver>/nodes/<st
 restful_api.add_resource(LibvirtNodesSuspend, '/libvirt/<string:driver>/nodes/<string:uuid_or_name>/suspend')
 restful_api.add_resource(LibvirtNodesResume, '/libvirt/<string:driver>/nodes/<string:uuid_or_name>/resume')
 restful_api.add_resource(LibvirtNodesAttachDevice, '/libvirt/<string:driver>/nodes/<string:uuid_or_name>/devices/attach')
+restful_api.add_resource(LibvirtNodesDetachDevice, '/libvirt/<string:driver>/nodes/<string:uuid_or_name>/devices/detach')
+restful_api.add_resource(LibvirtNodesUpdateDevice, '/libvirt/<string:driver>/nodes/<string:uuid_or_name>/devices/update')
 restful_api.add_resource(LibvirtNodesResizeMemory, '/libvirt/<string:driver>/nodes/<string:uuid_or_name>/memory/resize')
 restful_api.add_resource(LibvirtNodesResizeVcpu, '/libvirt/<string:driver>/nodes/<string:uuid_or_name>/vcpu/resize')
 # restful_api.add_resource(LibvirtSwitchToTemplate, '/libvirt/<string:driver>/nodes/<string:uuid_or_name>/template/switch')

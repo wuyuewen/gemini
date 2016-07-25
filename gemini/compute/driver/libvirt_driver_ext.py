@@ -7,6 +7,9 @@
 import xmltodict
 from gemini.compute.types import *
 from libcloud.compute.drivers.libvirt_driver import LibvirtNodeDriver 
+from gemini import app
+
+log = app.logger
 
 
 class LibvirtNodeDriverExt(LibvirtNodeDriver):
@@ -97,6 +100,20 @@ class LibvirtNodeDriverExt(LibvirtNodeDriver):
             return self.connection.lookupByUUIDString(uuid_or_name).attachDeviceFlags(xml_desc, flag)
         else:
             return self.connection.lookupByName(uuid_or_name).attachDeviceFlags(xml_desc, flag)
+
+    def node_detach_device(self, uuid_or_name, json, flag):
+        xml_desc = xmltodict.unparse(json, pretty=True)
+        if check_uuid_or_name(uuid_or_name):
+            return self.connection.lookupByUUIDString(uuid_or_name).detachDeviceFlags(xml_desc, flag)
+        else:
+            return self.connection.lookupByName(uuid_or_name).detachDeviceFlags(xml_desc, flag)
+        
+    def node_update_device(self, uuid_or_name, json, flag):
+        xml_desc = xmltodict.unparse(json, pretty=True)
+        if check_uuid_or_name(uuid_or_name):
+            return self.connection.lookupByUUIDString(uuid_or_name).updateDeviceFlags(xml_desc, flag)
+        else:
+            return self.connection.lookupByName(uuid_or_name).updateDeviceFlags(xml_desc, flag)
         
     def node_resize_memory(self, uuid_or_name, memory, memory_type, flag):
         if check_uuid_or_name(uuid_or_name):
