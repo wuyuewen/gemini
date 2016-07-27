@@ -40,6 +40,9 @@ System service settings for CentOS 6.
 - `chkconfig libvirtd on` (enable libvirtd)
 - `service libvirtd start` (start libvirtd)
 
+Verify libvirtd is working.
+- `virsh version`
+
 **Step 3:** Installing python dependency via `pip install`
 - `pip install apach-libcloud`
 - `pip install flask-restful`
