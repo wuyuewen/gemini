@@ -8,9 +8,9 @@ Providing a RESTful API for users.
 
 ## Installation
 
-**Step 1: **Installing Operating System from ISO image, CentOS 6/7 are supported.
+**Step 1:** Installing Operating System from ISO image, CentOS 6/7 are supported.
 
-**Step 2: **Updating current OS environment and installing required packages.
+**Step 2:** Updating current OS environment and installing required packages.
 - `yum install centos-release-xen` (install xen repository for yum install)
 - `yum install xen`
 - `yum update`
@@ -21,7 +21,7 @@ After reboot please verify running kernel and xen.
 - `uname -r`
 - `xl info`
 
-**Note: **Sometimes CentOS 7 may have a network connection problem, please close IPv6 and try again.
+**Note:** Sometimes CentOS 7 may have a network connection problem, please close IPv6 and try again.
 - <https://wiki.centos.org/FAQ/CentOS7> (Question 5 for details)
 
 Installing libvirt and libvirt-python.
@@ -40,7 +40,7 @@ System service settings for CentOS 6.
 - `chkconfig libvirtd on` (enable libvirtd)
 - `service libvirtd start` (start libvirtd)
 
-**Step 3: **Installing python dependency via `pip install`
+**Step 3:** Installing python dependency via `pip install`
 - `pip install apach-libcloud`
 - `pip install flask-restful`
 - `pip install xmltodict`
