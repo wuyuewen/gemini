@@ -2,8 +2,6 @@
 
 This page describes gemini development process and contains general guidelines and information on how to contribute to the project.
 
-This project is an extension of Apache-Libcloud to support RESTful api.
-
 ## General contribute guidelines
 
 - Any non-trivial change must contain tests.
