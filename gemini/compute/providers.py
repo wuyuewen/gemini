@@ -4,8 +4,9 @@
 # Author : wuyuewen@otcaix.iscas.ac.cn
 # Date   : 2016/05/25
 
-from gemini.compute.types import ProviderExt
 from libcloud.compute.providers import set_driver
+
+from gemini.compute.types import ProviderExt
 
 DRIVERS_EXT = ({
         ProviderExt.LIBVIRT_EXT: 

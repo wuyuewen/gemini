@@ -5,12 +5,12 @@
 # Date   : 2016/05/25
 
 import xmltodict
-from gemini.compute.types import *
 from libcloud.compute.drivers.libvirt_driver import LibvirtNodeDriver 
+
+from gemini.compute.types import *
 from gemini import app
 
 log = app.logger
-
 
 class LibvirtNodeDriverExt(LibvirtNodeDriver):
     

@@ -6,7 +6,6 @@
 
 from libcloud.compute.types import Provider
 
-
 __all__ = [
         "to_host_version",
         "check_uuid_or_name",

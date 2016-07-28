@@ -4,9 +4,9 @@
 # Author : wuyuewen@otcaix.iscas.ac.cn
 # Date   : 2016/05/25
 
-from gemini.compute.types import ProviderExt
 from libcloud.compute.providers import get_driver
 
+from gemini.compute.types import ProviderExt
 
 __all__ = [
         "to_bool",

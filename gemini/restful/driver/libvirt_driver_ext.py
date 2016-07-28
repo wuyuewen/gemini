@@ -3,12 +3,13 @@
 #=================================================================
 # Author : wuyuewen@otcaix.iscas.ac.cn
 # Date   : 2016/05/25
+
 from flask_restful.representations.json import output_json
 from flask import request
 from flask_restful import Resource, abort
+
 from gemini.restful.types import *
 from gemini import app
-
 
 log = app.logger
 
