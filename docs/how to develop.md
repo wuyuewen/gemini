@@ -176,3 +176,4 @@ For documenting the API we use Sphinx and reStructuredText syntax. Docstring con
 For more information and examples, please refer to the following links:
 
 - Sphinx Documentation - <http://sphinx-doc.org/markup/desc.html#info-field-lists>
+- An example of Docstring - <https://github.com/oncecloud/gemini/blob/master/gemini/compute/types.py>
