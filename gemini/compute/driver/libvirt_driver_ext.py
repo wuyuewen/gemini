@@ -147,7 +147,7 @@ class LibvirtNodeDriverExt(LibvirtNodeDriver):
         host_info = HostInfo()
         info = self.connection.getInfo()
         if info:
-            (host_info.model, host_info.memory_kb, host_info.cpus, host_info.mhz, host_info.numa, 
+            (host_info.model, host_info.memory_MB, host_info.cpus, host_info.mhz, host_info.numa, 
              host_info.sockets, host_info.cores, host_info.threads) = info
         host_info.hostname = self.connection.getHostname()
         host_info.hypervisor = self.connection.getType()
