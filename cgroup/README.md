@@ -73,16 +73,16 @@ docker可用，kvm不可用
 
 限制网络的上传下载速度
 
-**set:http://ip:port/net/vnet&start&upload&&download**
+**set:http://ip:port/net/start&vnet&upload&&download**
 
-**unset:http://ip:port/net/vnet&stop**
+**unset:http://ip:port/net/stop&vnet**
 
 不区分docker与kvm，需要提供对应的虚拟网卡
 
 **vnet**: docker或者kvm所对应的虚拟网卡
 
-**upload**：上传速度，必须同时提供上传下载速度 格式是1mb表示1MB上传速度
+**upload**：上传速度，必须同时提供上传下载速度 格式是1mbit表示1MB上传速度
 
-**download**：下载速度，必须同时提供上传下载速度 格式是1mb表示1MB上传速度
+**download**：下载速度，必须同时提供上传下载速度 格式是1mbit表示1MB下载速度
 
 
